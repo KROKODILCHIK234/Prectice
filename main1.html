@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Район Z</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .place, .review {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+        .place img, .review img {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px;
+        }
+        .place h3, .review h3 {
+            margin: 0 0 10px;
+            color: #555;
+        }
+        .place p, .review p {
+            margin: 5px 0;
+            color: #777;
+        }
+        .reviews-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .review {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .review img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        .review p {
+            text-align: center;
+        }
+        .attendance {
+            margin-top: 10px;
+        }
+        .attendance h4 {
+            margin-bottom: 5px;
+        }
+        .attendance .day {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .attendance .bar {
+            height: 10px;
+            background-color: #ccc;
+            margin-left: 10px;
+            border-radius: 5px;
+            flex-grow: 1;
+        }
+        .slider {
+            position: relative;
+            width: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+        }
+        .slides {
+        display: flex;
+        transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Используем кривую Безье для более плавного перелистывания */
+        }
+        .slide {
+            min-width: 100%;
+            box-sizing: border-box;
+            display: none; /* Скрыть все слайды по умолчанию */
+        }
+        .slide.active {
+            display: block; /* Показать активный слайд */
+        }
+        .slide img {
+            width: 100%;
+            display: block;
+            cursor: pointer;
+        }
+        .nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+        .nav button {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .dots {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #bbb;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        .dot.active {
+            background-color: #555;
+        }
+        .map-container {
+            position: relative;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .map-image {
+            width: 100%;
+            display: block;
+        }
+        .points {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .point {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: red; /* Цвет точки */
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+        .point:hover {
+            transform: scale(1.5); /* Увеличение точки при наведении */
+        }
+        .point-name {
+            position: absolute;
+            top: -20px; /* Позиция над точкой */
+            left: 50%; /* Центрирование текста относительно точки */
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7); /* Фон текста */
+            color: white; /* Цвет текста */
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 12px;
+            opacity: 0; /* Начальная прозрачность */
+            transition: opacity 0.3s ease-in-out;
+        }
+        .point:hover .point-name {
+            opacity: 1; /* Отображение текста при наведении */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Добро пожаловать в Район Z</h1>
+        <div class="slider">
+            <div class="slides">
+                <div class="slide active">
+                    <img src="map.jpg" alt="Карта Района Z" class="map-image">
+                </div>
+                <div class="slide">
+                    <img src="RockfordHillsSign-Map.jpg" alt="Карта Рокфорд Хиллз" class="map-image">
+                    <div class="points">
+                        <div class="point" style="top: 40%; left: 20%;">
+                            <span class="point-name">Rockford Hills Park</span>
+                        </div>
+                        <div class="point" style="top: 60%; left: 60%;">
+                            <span class="point-name">Luxury Modern Art Museum</span>
+                        </div>
+                        <div class="point" style="top: 70%; left: 30%;">
+                            <span class="point-name">Gourmet Restaurant</span>
+                        </div>
+                        <div class="point" style="top: 20%; left: 20%;">
+                            <span class="point-name">Lux Cinema</span>
+                        </div>
+                        <div class="point" style="top: 80%; left: 70%;">
+                            <span class="point-name">Wave Water Park</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="nav">
+                <button class="prev">&laquo;</button>
+                <button class="next">&raquo;</button>
+            </div>
+            <div class="dots">
+                <span class="dot" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+            </div>
+        </div>
+        <p style="text-align: center; font-size: 18px; color: #555;">
+            Дорогие жители и гости нашего прекрасного района! Мы рады представить вам новые места для отдыха и развлечений. Пусть ваше пребывание в нашем районе будет наполнено радостью, интересными событиями и незабываемыми впечатлениями. Приятного времяпрепровождения!
+        </p>
+        <p style="text-align: right; font-size: 16px; color: #555;">
+            С уважением, ваш мэр
+        </p>
+        <p style="text-align: right; font-size: 16px; color: #555;">
+            18 июня 2024 года
+        </p>
+        <h2>Новые места</h2>
+    <div class="place">
+        <h3>Парк Солнечный</h3>
+        <img src="park.jpg" alt="Парк Солнечный">
+        <p>Категория: Парки</p>
+        <p>Описание: Прекрасное место для отдыха всей семьей, с обилием зелени и зон для пикника.</p>
+        <div class="attendance">
+            <h4>Посещаемость:</h4>
+            <div class="day">
+                Понедельник
+                <div class="bar" style="width: 30%;"></div>
+            </div>
+            <div class="day">
+                Вторник
+                <div class="bar" style="width: 50%;"></div>
+            </div>
+            <div class="day">
+                Среда
+                <div class="bar" style="width: 70%;"></div>
+            </div>
+            <div class="day">
+                Четверг
+                <div class="bar" style="width: 40%;"></div>
+            </div>
+            <div class="day">
+                Пятница
+                <div class="bar" style="width: 90%;"></div>
+            </div>
+            <div class="day">
+                Суббота
+                <div class="bar" style="width: 100%;"></div>
+            </div>
+            <div class="day">
+                Воскресенье
+                <div class="bar" style="width: 80%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="place">
+        <h3>Музей Современного Искусства</h3>
+        <img src="museum.jpg" alt="Музей Современного Искусства">
+        <p>Категория: Музеи</p>
+        <p>Описание: Здесь вы найдете экспонаты современных художников и интерактивные выставки.</p>
+        <div class="attendance">
+            <h4>Посещаемость:</h4>
+            <div class="day">
+                Понедельник
+                <div class="bar" style="width: 20%;"></div>
+            </div>
+            <div class="day">
+                Вторник
+                <div class="bar" style="width: 60%;"></div>
+            </div>
+            <div class="day">
+                Среда
+                <div class="bar" style="width: 80%;"></div>
+            </div>
+            <div class="day">
+                Четверг
+                <div class="bar" style="width: 50%;"></div>
+            </div>
+            <div class="day">
+                Пятница
+                <div class="bar" style="width: 70%;"></div>
+            </div>
+            <div class="day">
+                Суббота
+                <div class="bar" style="width: 90%;"></div>
+            </div>
+            <div class="day">
+                Воскресенье
+                <div class="bar" style="width: 40%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="place">
+        <h3>Ресторан "Гурман"</h3>
+        <img src="restaurant.jpg" alt="Ресторан Гурман">
+        <p>Категория: Рестораны</p>
+        <p>Описание: Изысканная кухня с блюдами на любой вкус от лучших шеф-поваров.</p>
+        <div class="attendance">
+            <h4>Посещаемость:</h4>
+            <div class="day">
+                Понедельник
+                <div class="bar" style="width: 50%;"></div>
+            </div>
+            <div class="day">
+                Вторник
+                <div class="bar" style="width: 30%;"></div>
+            </div>
+            <div class="day">
+                Среда
+                <div class="bar" style="width: 60%;"></div>
+            </div>
+            <div class="day">
+                Четверг
+                <div class="bar" style="width: 40%;"></div>
+            </div>
+            <div class="day">
+                Пятница
+                <div class="bar" style="width: 70%;"></div>
+            </div>
+            <div class="day">
+                Суббота
+                <div class="bar" style="width: 90%;"></div>
+            </div>
+            <div class="day">
+                Воскресенье
+                <div class="bar" style="width: 80%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="place">
+        <h3>Кинотеатр "Люкс"</h3>
+        <img src="cinema.jpg" alt="Кинотеатр Люкс">
+        <p>Категория: Кинотеатры</p>
+        <p>Описание: Современный кинотеатр с последними новинками кино и уютными залами.</p>
+        <div class="attendance">
+            <h4>Посещаемость:</h4>
+            <div class="day">
+                Понедельник
+                <div class="bar" style="width: 40%;"></div>
+            </div>
+            <div class="day">
+                Вторник
+                <div class="bar" style="width: 50%;"></div>
+            </div>
+            <div class="day">
+                Среда
+                <div class="bar" style="width: 60%;"></div>
+            </div>
+            <div class="day">
+                Четверг
+                <div class="bar" style="width: 70%;"></div>
+            </div>
+            <div class="day">
+                Пятница
+                <div class="bar" style="width: 90%;"></div>
+            </div>
+            <div class="day">
+                Суббота
+                <div class="bar" style="width: 100%;"></div>
+            </div>
+            <div class="day">
+                Воскресенье
+                <div class="bar" style="width: 80%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="place">
+        <h3>Аквапарк "Волна"</h3>
+        <img src="acva.jpg" alt="Аквапарк Волна">
+        <p>Категория: Развлечения</p>
+        <p>Описание: Большой аквапарк с водными горками, бассейнами и зоной отдыха.</p>
+        <div class="attendance">
+            <h4>Посещаемость:</h4>
+            <div class="day">
+                Понедельник
+                <div class="bar" style="width: 50%;"></div>
+            </div>
+            <div class="day">
+                Вторник
+                <div class="bar" style="width: 60%;"></div>
+            </div>
+            <div class="day">
+                Среда
+                <div class="bar" style="width: 70%;"></div>
+            </div>
+            <div class="day">
+                Четверг
+                <div class="bar" style="width: 80%;"></div>
+            </div>
+            <div class="day">
+                Пятница
+                <div class="bar" style="width: 90%;"></div>
+            </div>
+            <div class="day">
+                Суббота
+                <div class="bar" style="width: 100%;"></div>
+            </div>
+            <div class="day">
+                Воскресенье
+                <div class="bar" style="width: 90%;"></div>
+            </div>
+        </div>
+    </div>
+        <h2>Отзывы</h2>
+    <h3>Парк Солнечный</h3>
+    <div class="reviews-container">
+        <div class="review">
+            <img src="avatar.png" alt="Марина Васильева">
+            <h3>Марина Васильева</h3>
+            <p>Оценка: 5</p>
+            <p>Мой любимый парк. Отличное место для прогулок и отдыха с семьей!</p>
+        </div>
+        <div class="review">
+            <img src="avatar2.png" alt="Алексей Иванов">
+            <h3>Алексей Иванов</h3>
+            <p>Оценка: 1</p>
+            <p>Парк был грязным, и много мусора повсюду. Очень разочарован.</p>
+        </div>
+        <div class="review">
+            <img src="avatar.png" alt="Ирина Кузьмина">
+            <h3>Ирина Кузьмина</h3>
+            <p>Оценка: 4</p>
+            <p>Приятное место для отдыха, но иногда бывает слишком многолюдно.</p>
+        </div>
+    </div>
+    <h3>Музей Современного Искусства</h3>
+    <div class="reviews-container">
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Игорь Смирнов">
+            <h3>Игорь Смирнов</h3>
+            <p>Оценка: 4</p>
+            <p>Музей современного искусства удивил разнообразием экспозиций. Очень интересно!</p>
+        </div>
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Елена Морозова">
+            <h3>Елена Морозова</h3>
+            <p>Оценка: 3</p>
+            <p>Музей был интересным, но некоторые экспозиции казались скучными.</p>
+        </div>
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Владимир Новиков">
+            <h3>Владимир Новиков</h3>
+            <p>Оценка: 5</p>
+            <p>Очень понравилась выставка современных художников. Рекомендую!</p>
+        </div>
+    </div>
+    <h3>Ресторан "Гурман"</h3>
+    <div class="reviews-container">
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Ольга Петрова">
+            <h3>Ольга Петрова</h3>
+            <p>Оценка: 2</p>
+            <p>Еда в ресторане была не на высоте, ожидала большего за такие деньги.</p>
+        </div>
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Андрей Павлов">
+            <h3>Андрей Павлов</h3>
+            <p>Оценка: 2</p>
+            <p>Ресторан "Гурман" разочаровал обслуживанием и долгим ожиданием блюд.</p>
+        </div>
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Марина Королева">
+            <h3>Марина Королева</h3>
+            <p>Оценка: 4</p>
+            <p>Вкусная еда и приятная атмосфера, но цены немного завышены.</p>
+        </div>
+    </div>
+    <h3>Кинотеатр "Люкс"</h3>
+    <div class="reviews-container">
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Павел Сергеев">
+            <h3>Павел Сергеев</h3>
+            <p>Оценка: 4</p>
+            <p>Кинотеатр "Люкс" порадовал новыми фильмами и комфортом. Рекомендую!</p>
+        </div>
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Александр Зайцев">
+            <h3>Александр Зайцев</h3>
+            <p>Оценка: 3</p>
+            <p>Фильмы хорошие, но попкорн был не свежим.</p>
+        </div>
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Наталья Смирнова">
+            <h3>Наталья Смирнова</h3>
+            <p>Оценка: 5</p>
+            <p>Отличный кинотеатр с удобными креслами и хорошим звуком.</p>
+        </div>
+    </div>
+    <h3>Аквапарк "Волна"</h3>
+    <div class="reviews-container">
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Светлана Кузнецова">
+            <h3>Светлана Кузнецова</h3>
+            <p>Оценка: 5</p>
+            <p>Аквапарк "Волна" - отличное место для семейного отдыха! Дети в восторге!</p>
+        </div>
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Иван Петров">
+            <h3>Иван Петров</h3>
+            <p>Оценка: 4</p>
+            <p>Хороший аквапарк, но немного дорогие билеты.</p>
+        </div>
+        <div class="review">
+            <img src="https://via.placeholder.com/100x100.png?text=Аватар" alt="Татьяна Орлова">
+            <h3>Татьяна Орлова</h3>
+            <p>Оценка: 3</p>
+            <p>Понравилось, но в выходные слишком много людей.</p>
+        </div>
+    </div>
+     <script>
+        let slideIndex = 0;
+        let slides = document.getElementsByClassName("slide");
+        let dots = document.getElementsByClassName("dot");
+
+        function showSlides() {
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex].style.display = "block";
+            dots[slideIndex].className += " active";
+        }
+
+        function currentSlide(index) {
+            slideIndex = index;
+            showSlides();
+        }
+
+        function plusSlides(n) {
+            slideIndex += n;
+            if (slideIndex >= slides.length) {
+                slideIndex = 0;
+            } else if (slideIndex < 0) {
+                slideIndex = slides.length - 1;
+            }
+            showSlides();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const prevButton = document.querySelector(".prev");
+            const nextButton = document.querySelector(".next");
+
+            prevButton.addEventListener("click", () => {
+                plusSlides(-1);
+            });
+
+            nextButton.addEventListener("click", () => {
+                plusSlides(1);
+            });
+
+            showSlides();
+        });
+
+        // Функция для отображения названия достопримечательности
+        // function showLandmark(landmark) {
+        //     alert(`You are hovering over ${landmark}.`);
+        // }
+         const slider = document.querySelector('.slides');
+        let isDragging = false;
+        let startPos = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let animationID = 0;
+        let currentIndex = 0;
+
+        slider.addEventListener('mousedown', (e) => {
+          isDragging = true;
+          startPos = e.clientX;
+          animationID = requestAnimationFrame(animation);
+        });
+
+        slider.addEventListener('mouseup', () => {
+          isDragging = false;
+          cancelAnimationFrame(animationID);
+          const movedBy = currentTranslate - prevTranslate;
+
+          if (movedBy < -100 && currentIndex < slides.length - 1) {
+            currentIndex += 1;
+          }
+
+          if (movedBy > 100 && currentIndex > 0) {
+            currentIndex -= 1;
+          }
+
+          setPositionByIndex();
+        });
+
+        slider.addEventListener('mouseleave', () => {
+          isDragging = false;
+          cancelAnimationFrame(animationID);
+          setPositionByIndex();
+        });
+
+        slider.addEventListener('mousemove', (e) => {
+          if (isDragging) {
+            const currentPosition = e.clientX;
+            currentTranslate = prevTranslate + currentPosition - startPos;
+          }
+        });
+
+        function animation() {
+          setSliderPosition();
+          if (isDragging) requestAnimationFrame(animation);
+        }
+
+        function setSliderPosition() {
+          slider.style.transform = `translateX(${currentTranslate}px)`;
+        }
+
+        function setPositionByIndex() {
+          currentTranslate = currentIndex * -window.innerWidth;
+          prevTranslate = currentTranslate;
+          setSliderPosition();
+        }
+         const area = document.querySelector('area[title="Luxury Modern Art Museum"]');
+
+area.addEventListener('mouseover', () => {
+  area.setAttribute('title', '🏛 Luxury Modern Art Museum 🎨');
+});
+
+area.addEventListener('mouseout', () => {
+  area.setAttribute('title', 'Luxury Modern Art Museum');
+});
+
+    </script>
+</body>
+</html>
